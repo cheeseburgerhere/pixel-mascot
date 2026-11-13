@@ -10,6 +10,13 @@ state animating side by side, and fix pixels yourself in its editor. It uses
 only the Python standard library, so there is nothing to install beyond
 Python 3. It runs on Windows, macOS and Linux.
 
+<img src="docs/b-side-pane.gif" alt="Miso, a pixel cat made with this kit, dancing at the top of the B-side music pane beside a pixel equalizer" width="662">
+
+*A mascot made with this kit, in use: Miso dancing in the pane of
+[B-side](https://github.com/cheeseburgerhere/b-side), a separate Claude Code
+mod that logs the music you code to. The pane, the equalizer and the moods
+come from B-side, not from this repo.*
+
 ## Install
 
 At the prompt of a Claude Code terminal session:
