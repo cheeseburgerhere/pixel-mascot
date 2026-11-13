@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mascot studio</title>
+<style>
+body{margin:0;padding:24px;background:#1e1e1d;color:#c9c7c0;font:13px ui-monospace,Consolas,monospace}
+h1{font-size:14px;font-weight:normal;margin:0 0 16px}
+a{color:#8FA8E8}
+.row{display:flex;flex-wrap:wrap;gap:20px}
+figure{margin:0;padding:12px;background:#2a2928;border:1px solid #3a3937}
+iframe{width:256px;height:256px;border:0;display:block}
+figcaption{margin-top:8px;text-align:center}
+.swatches{margin:0 0 16px;display:flex;gap:8px;align-items:center}
+.swatches:empty{display:none}
+.swatches button{width:22px;height:22px;border:2px solid #555;cursor:pointer}
+</style>
+</head>
+<body>
+<h1><span id="name">mascot</span> · all states · <a href="editor.html">pixel editor</a></h1>
+<div class="swatches" id="swatches"></div>
+<div class="row" id="row"></div>
+<script>
+// Each state in its own iframe: an inline SVG's <style> is page-global, so
+// side by side one copy's state rules would leak into another.
+let info, swatch = null;
+
+// The root gets the state's class (replacing any default state baked in) and style.
+function rooted(svg, state) {
+  const vars = state.style + (info.swatches && swatch ? `;${info.swatches.var}:${swatch}` : "");
+  const cls = [state.class, info.rootClass].filter(Boolean).join(" ");
+  return svg.replace(/<svg\b([^>]*?)\sclass="[^"]*"/, "<svg$1")
+            .replace("<svg ", `<svg class="${cls}" style="${vars}" `);
+}
+
+function recolor(c) {
+  swatch = c;
+  for (const f of document.querySelectorAll("iframe")) {
+    const svg = f.contentDocument && f.contentDocument.querySelector("svg");
+    if (svg) svg.style.setProperty(info.swatches.var, c);
+  }
+}
+
+async function show() {
+  info = await (await fetch("/api/info")).json();
+  document.getElementById("name").textContent = info.name;
+  document.title = `${info.name} · mascot studio`;
+  if (info.swatches) {
+    const bar = document.getElementById("swatches");
+    bar.textContent = (info.swatches.label || info.swatches.var) + ":";
+    swatch = info.swatches.colors[0];
+    for (const c of info.swatches.colors) {
+      const b = document.createElement("button");
+      b.style.background = c; b.onclick = () => recolor(c);
+      bar.append(b);
+    }
+  }
+  const svg = await (await fetch("/api/working")).text();
+  const row = document.getElementById("row");
+  row.innerHTML = "";
+  for (const state of info.states) {
+    const fig = document.createElement("figure"), f = document.createElement("iframe");
+    f.scrolling = "no";
+    f.srcdoc = "<style>html,body{margin:0;background:transparent;overflow:hidden}svg{width:256px;height:256px;display:block}</style>" +
+      rooted(svg, state);
+    fig.append(f, Object.assign(document.createElement("figcaption"), { textContent: state.label }));
+    row.append(fig);
+  }
+}
+
+show();
+</script>
+</body>
+</html>

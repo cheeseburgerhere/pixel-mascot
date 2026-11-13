@@ -1,0 +1,6 @@
+{
+  "name": "pixel-mascot",
+  "owner": { "name": "cheeseburgerhere" },
+  "description": "pixel-mascot: animated pixel-art SVG sprites, built from code, with a studio and pixel editor",
+  "plugins": [{ "name": "pixel-mascot", "source": "./" }]
+}

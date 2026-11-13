@@ -1,0 +1,8 @@
+{
+  "name": "pixel-mascot",
+  "version": "0.1.0",
+  "description": "Make animated pixel-art sprites as SVG: any character, animal or object, with the animation states you name, plus a local studio with a pixel editor.",
+  "author": { "name": "cheeseburgerhere", "url": "https://github.com/cheeseburgerhere" },
+  "repository": "https://github.com/cheeseburgerhere/pixel-mascot",
+  "license": "MIT"
+}
